@@ -3,7 +3,7 @@ package itmo.nxzage.common.data;
 /**
  * Class of 2D coordinates with properties X and Y
  */
-public class Coordinates {
+public final class Coordinates {
     private static final Double MIN_X = -727d;
     private static final String X_NULL_MESSAGE;
     private static final String X_OUT_OF_RANGE_MESSAGE;
@@ -24,18 +24,8 @@ public class Coordinates {
     }
 
     public Coordinates(Double x, Float y) {
-        if (x == null) {
-            throw new IllegalArgumentException(X_NULL_MESSAGE);
-        }
-        if (x <= MIN_X) {
-            throw new IllegalArgumentException(X_OUT_OF_RANGE_MESSAGE);
-        }
-        if (y == null) {
-            throw new IllegalArgumentException(Y_NULL_MESSAGE);
-        }
-
-        this.x = x;
-        this.y = y;
+        this.setX(x);
+        this.setY(y);
     }
 
     public Double getX() {
@@ -63,10 +53,5 @@ public class Coordinates {
         }
 
         this.y = value;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Coordinates(%f, %f)", this.x, this.y);
     }
 }
