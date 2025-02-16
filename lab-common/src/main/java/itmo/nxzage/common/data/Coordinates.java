@@ -37,10 +37,10 @@ public final class Coordinates {
     }
 
     public void setX(Double value) {
-        if (x == null) {
+        if (value == null) {
             throw new IllegalArgumentException(X_NULL_MESSAGE);
         }
-        if (x <= MIN_X) {
+        if (value <= MIN_X) {
             throw new IllegalArgumentException(X_OUT_OF_RANGE_MESSAGE);
         }
 
@@ -48,10 +48,16 @@ public final class Coordinates {
     }
 
     public void setY(Float value) {
-        if (y == null) {
+        if (value == null) {
             throw new IllegalArgumentException(Y_NULL_MESSAGE);
         }
 
         this.y = value;
+    }
+
+    @Override
+    public String toString() {
+        String result = String.format("Coordinates(%f, %f)", this.x, this.y);
+        return result;
     }
 }

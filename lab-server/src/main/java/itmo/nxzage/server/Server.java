@@ -1,6 +1,7 @@
 package itmo.nxzage.server;
 
 import itmo.nxzage.common.data.Coordinates;
+import itmo.nxzage.common.data.Location;
 
 public final class Server {
 
@@ -10,9 +11,17 @@ public final class Server {
     }
 
     public static void main(String[] args) {
-        final Double x = 100d;
-        final Double y = 100d;
-        Coordinates coordinates = new Coordinates(x, y);
+        final Double cx = 100d;
+        final Float cy = 100f;
+        Coordinates coordinates = new Coordinates(cx, new Float(cy));
+
+        final Float lx = 23f;
+        final Integer ly = 1232;
+        final Long lz = 123412L;
+        final String name = "DonDon";
+        Location location = new Location(lx, ly, lz, name);
+
         System.out.println(coordinates);
+        System.out.println(location);
     }
 }

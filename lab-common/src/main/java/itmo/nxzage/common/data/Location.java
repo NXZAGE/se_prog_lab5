@@ -52,7 +52,7 @@ public final class Location {
     }
 
     public void setX(Float value) {
-        if (x == null) {
+        if (value == null) {
             throw new IllegalArgumentException(X_NULL_MESSAGE);
         }
         this.x = value;
@@ -67,13 +67,20 @@ public final class Location {
     }
 
     public void setName(String value) {
-        if (name == null) {
+        if (value == null) {
             throw new IllegalArgumentException(NAME_NULL_MESSAGE);
         }
-        if (name.length() > NAME_MAX_LENGTH) {
+        if (value.length() > NAME_MAX_LENGTH) {
             throw new IllegalArgumentException(NAME_LENGTH_MESSAGE);
         }
 
         this.name = value;
+    }
+
+    @Override
+    public String toString() {
+        String result = String.format("Location[\"%s\"](%f, %d, %d)", this.name,
+                this.x, this.y, this.z);
+        return result;
     }
 }
