@@ -83,4 +83,27 @@ public final class Location {
                 this.x, this.y, this.z);
         return result;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || other.getClass() != this.getClass()) {
+            return false;
+        }
+        Location location = (Location) other;
+        return (this.x.equals(location.x) && this.y.equals(location.y)
+                && this.z.equals(location.z));
+    }
+
+    @Override
+    public int hashCode() {
+        final int mod = 31;
+        int hash = mod;
+        hash = hash * mod + x.hashCode();
+        hash = hash * mod + y.hashCode();
+        hash = hash * mod + z.hashCode();
+        return hash;
+    }
 }
