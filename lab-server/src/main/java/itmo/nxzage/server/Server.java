@@ -2,6 +2,7 @@ package itmo.nxzage.server;
 
 import itmo.nxzage.common.data.Coordinates;
 import itmo.nxzage.common.data.Location;
+import itmo.nxzage.common.data.Person;
 
 public final class Server {
 
