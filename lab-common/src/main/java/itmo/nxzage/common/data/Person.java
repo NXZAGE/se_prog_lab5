@@ -1,11 +1,13 @@
 package itmo.nxzage.common.data;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Person data class (main data container)
  */
-public final class Person {
+public final class Person implements Comparable<Person> {
     private static Integer nextID = 1;
 
     private static final Float MIN_HEIGHT = 1f;
@@ -163,5 +165,72 @@ public final class Person {
 
     public Location getLocation() {
         return this.location;
+    }
+
+    public int compareTo(Person other) {
+        final int moreValue = 1;
+        final int lessValue = -1;
+        final int equalsValue = 0;
+        if (this.id > other.id) {
+            return moreValue;
+        }
+        if (this.id < other.id) {
+            return lessValue;
+        }
+        return equalsValue;
+    }
+
+    @Override
+    public String toString() {
+        String datePattern = "dd.MM.yyyy HH:mm:ss";
+        DateFormat dateFormat = new SimpleDateFormat(datePattern);
+        String formattedCreationDate = dateFormat.format(this.creationDate);
+        String result = String.format(
+                "OBJECT PERSON [\n" + "  ID: %d\n" + "  Creation date: %s\n"
+                        + "  Name: $s\n" + "  Coordinates: %s\n"
+                        + "  Height: %d sm\n" + "  Weight: %d kg\n"
+                        + "  Passport ID: %s\n" + "  Nationality: %s\n"
+                        + "  Location: %s\n" + "]",
+                this.id, formattedCreationDate, this.name,
+                this.coordinates.toString(), this.height, this.weight,
+                this.passportID, this.nationality.toString(),
+                this.location.toString());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || other.getClass() != this.getClass()) {
+            return false;
+        }
+        Person person = (Person) other;
+        return (this.id.equals(person.id)
+                && this.creationDate.equals(person.creationDate)
+                && this.name.equals(person.name)
+                && this.coordinates.equals(person.coordinates)
+                && this.height.equals(person.height)
+                && this.weight.equals(person.weight)
+                && this.passportID.equals(person.passportID)
+                && this.nationality.equals(person.nationality)
+                && this.location.equals(person.location));
+    }
+
+    @Override
+    public int hashCode() {
+        final int mod = 31;
+        int hash = mod;
+        hash = hash * mod + (id == null ? 0 : id.hashCode());
+        hash = hash * mod + (creationDate == null ? 0 : creationDate.hashCode());
+        hash = hash * mod + (name == null ? 0 : name.hashCode());
+        hash = hash * mod + (coordinates == null ? 0 : coordinates.hashCode());
+        hash = hash * mod + (height == null ? 0 : height.hashCode());
+        hash = hash * mod + (weight == null ? 0 : weight.hashCode());
+        hash = hash * mod + (passportID == null ? 0 : passportID.hashCode());
+        hash = hash * mod + (nationality == null ? 0 : nationality.hashCode());
+        hash = hash * mod + (location == null ? 0 : location.hashCode());
+        return hash;
     }
 }
