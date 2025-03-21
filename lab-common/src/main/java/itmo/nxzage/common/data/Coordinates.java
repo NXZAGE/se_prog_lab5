@@ -60,4 +60,25 @@ public final class Coordinates {
         String result = String.format("Coordinates(%f, %f)", this.x, this.y);
         return result;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || this.getClass() != other.getClass()) {
+            return false;
+        }
+        Coordinates coordinates = (Coordinates) other;
+        return (this.x.equals(coordinates.x) && this.y.equals(coordinates.y));
+    }
+
+    @Override
+    public int hashCode() {
+        final int mod = 31;
+        int hash = mod;
+        hash = hash * mod + x.hashCode();
+        hash = hash * mod + y.hashCode();
+        return hash;
+    }
 }
