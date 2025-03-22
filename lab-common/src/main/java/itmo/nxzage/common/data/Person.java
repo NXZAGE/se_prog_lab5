@@ -8,12 +8,16 @@ import java.util.Date;
  * Person data class (main data container)
  */
 public final class Person implements Comparable<Person> {
-    private static Integer nextID = 1;
-
     private static final Float MIN_HEIGHT = 1f;
     private static final Long MIN_WEIGHT = 1L;
     private static final Integer PASSPORT_ID_MIN_LENGTH = 5;
     private static final Integer PASSPORT_ID_MAX_LENGHT = 24;
+    private static Integer nextID = 1;
+    private static final String CSV_DELIMETER = "$$";
+
+    public static final DateFormat CREATION_DATE_FORMAT =
+            new SimpleDateFormat("<dd.MM.yyyy HH:mm:ss z>");
+
 
     private Integer id; // can't be null, unique, autogenerate, >0
     private Date creationDate; // can be null, autogenerate
@@ -51,6 +55,11 @@ public final class Person implements Comparable<Person> {
         }
         if (value.length() == 0) {
             String message = "Name can\'t be blank";
+            throw new IllegalArgumentException(message);
+        }
+        if (value.contains(CSV_DELIMETER)) {
+            String message = String.format("Name can\'t contains \"%s\" symbol",
+                    CSV_DELIMETER);
             throw new IllegalArgumentException(message);
         }
 
@@ -110,6 +119,12 @@ public final class Person implements Comparable<Person> {
                             PASSPORT_ID_MAX_LENGHT);
             throw new IllegalArgumentException(message);
         }
+
+        if (value.contains(CSV_DELIMETER)) {
+            String message = String.format("PassportID can\'t contains \"%s\" symbol",
+                    CSV_DELIMETER);
+            throw new IllegalArgumentException(message);
+        }
         this.passportID = value;
     }
 
@@ -125,6 +140,12 @@ public final class Person implements Comparable<Person> {
     public void setLocation(Location value) {
         if (value == null) {
             String message = "Location can\'t be null";
+            throw new IllegalArgumentException(message);
+        }
+        if (value.getName().contains(CSV_DELIMETER)) {
+            String message =
+                    String.format("Location.name can\'t contains \"%s\" symbol",
+                            CSV_DELIMETER);
             throw new IllegalArgumentException(message);
         }
 
@@ -182,13 +203,12 @@ public final class Person implements Comparable<Person> {
 
     @Override
     public String toString() {
-        String datePattern = "dd.MM.yyyy HH:mm:ss";
-        DateFormat dateFormat = new SimpleDateFormat(datePattern);
-        String formattedCreationDate = dateFormat.format(this.creationDate);
+        String formattedCreationDate =
+                Person.CREATION_DATE_FORMAT.format(this.creationDate);
         String result = String.format(
                 "OBJECT PERSON [\n" + "  ID: %d\n" + "  Creation date: %s\n"
-                        + "  Name: $s\n" + "  Coordinates: %s\n"
-                        + "  Height: %d sm\n" + "  Weight: %d kg\n"
+                        + "  Name: %s\n" + "  Coordinates: %s\n"
+                        + "  Height: %f sm\n" + "  Weight: %d kg\n"
                         + "  Passport ID: %s\n" + "  Nationality: %s\n"
                         + "  Location: %s\n" + "]",
                 this.id, formattedCreationDate, this.name,
@@ -223,7 +243,8 @@ public final class Person implements Comparable<Person> {
         final int mod = 31;
         int hash = mod;
         hash = hash * mod + (id == null ? 0 : id.hashCode());
-        hash = hash * mod + (creationDate == null ? 0 : creationDate.hashCode());
+        hash = hash * mod
+                + (creationDate == null ? 0 : creationDate.hashCode());
         hash = hash * mod + (name == null ? 0 : name.hashCode());
         hash = hash * mod + (coordinates == null ? 0 : coordinates.hashCode());
         hash = hash * mod + (height == null ? 0 : height.hashCode());

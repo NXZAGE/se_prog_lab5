@@ -5,7 +5,7 @@ package itmo.nxzage.common.data;
  */
 public final class Location {
     private static final String DEFAULT_NAME = "noname";
-    private static final int NAME_MAX_LENGTH = 210;
+    private static final Integer NAME_MAX_LENGTH = 210;
     private static final String X_NULL_MESSAGE;
     private static final String NAME_NULL_MESSAGE;
     private static final String NAME_LENGTH_MESSAGE;
