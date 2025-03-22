@@ -156,7 +156,7 @@ public final class Person implements Comparable<Person> {
         return this.id;
     }
 
-    public java.util.Date getCreationDate() {
+    public Date getCreationDate() {
         return this.creationDate;
     }
 
