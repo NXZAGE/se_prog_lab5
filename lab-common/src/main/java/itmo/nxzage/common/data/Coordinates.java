@@ -1,13 +1,19 @@
 package itmo.nxzage.common.data;
 
+import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import itmo.nxzage.common.util.CSVSerializable;
+
 /**
  * Class of 2D coordinates with properties X and Y
  */
-public final class Coordinates {
+public final class Coordinates implements CSVSerializable {
     private static final Double MIN_X = -727d;
     private static final String X_NULL_MESSAGE;
     private static final String X_OUT_OF_RANGE_MESSAGE;
     private static final String Y_NULL_MESSAGE;
+    private static final String CSV_DESERIALIZATION_PATTERN;
 
     private Double x; // more than -727, can't be null
     private Float y; // can't be null
@@ -16,6 +22,9 @@ public final class Coordinates {
         X_NULL_MESSAGE = "X can\'t be null.";
         X_OUT_OF_RANGE_MESSAGE = String.format("X must be more than %f", MIN_X);
         Y_NULL_MESSAGE = "Y can\'t be null.";
+        String floatPattern = "\\d+(?:\\.\\d+)";
+        CSV_DESERIALIZATION_PATTERN = String.format(
+                "^Coordinates\\((%s),(%s)\\)$", floatPattern, floatPattern);
     }
 
     public Coordinates() {
@@ -26,6 +35,16 @@ public final class Coordinates {
     public Coordinates(Double x, Float y) {
         this.setX(x);
         this.setY(y);
+    }
+
+    public static Coordinates deserializeCSV(String code) throws ParseException {
+        Pattern pattern = Pattern.compile(CSV_DESERIALIZATION_PATTERN);
+        Matcher matcher = pattern.matcher(code);
+        if (matcher.find()) {
+            Double x = new Double(matcher.group(1));
+            Float y = new Float(matcher.group(2));
+            return new Coordinates(x, y);
+        } else throw new ParseException("[Coordinates.deserializeCSV()]Argument doesn\'t match the pattern", 0);
     }
 
     public Double getX() {
@@ -53,6 +72,12 @@ public final class Coordinates {
         }
 
         this.y = value;
+    }
+
+    @Override
+    public String serializeCSV() {
+        String pattern = "Coordinates(%f,%f)";
+        return String.format(pattern, x, y);
     }
 
     @Override

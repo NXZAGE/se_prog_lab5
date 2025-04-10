@@ -1,22 +1,49 @@
 package itmo.nxzage.common.data;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import itmo.nxzage.common.util.CSVSerializable;
 
 /**
  * Person data class (main data container)
  */
-public final class Person implements Comparable<Person> {
+public final class Person implements Comparable<Person>, CSVSerializable {
     private static final Float MIN_HEIGHT = 1f;
     private static final Long MIN_WEIGHT = 1L;
     private static final Integer PASSPORT_ID_MIN_LENGTH = 5;
     private static final Integer PASSPORT_ID_MAX_LENGHT = 24;
     private static Integer nextID = 1;
-    private static final String CSV_DELIMETER = "$$";
+    private static Pattern CSV_DESERIALIZATION_PATTERN;
+    private static String CSV_SERIALIZATION_PATTERN;
 
     public static final DateFormat CREATION_DATE_FORMAT =
             new SimpleDateFormat("<dd.MM.yyyy HH:mm:ss z>");
+    // сериализация может пойти по пизде из-за \n
+
+    static {
+        CSV_SERIALIZATION_PATTERN = "%d" + CSVSerializable.DELIMETER + // id
+                "%s" + CSVSerializable.DELIMETER + // creationDate
+                "%s" + CSVSerializable.DELIMETER + // name
+                "%s" + CSVSerializable.DELIMETER + // coordinates
+                "%f" + CSVSerializable.DELIMETER + // height
+                "%d" + CSVSerializable.DELIMETER + // weight
+                "%s" + CSVSerializable.DELIMETER + // passportID
+                "%s" + CSVSerializable.DELIMETER + // nationality
+                "%s" // location
+        ;
+
+        CSV_DESERIALIZATION_PATTERN = Pattern.compile(
+                "^(.+)" + DELIMETER_ESCAPE + "(.+)" + DELIMETER_ESCAPE + "(.+)"
+                        + DELIMETER_ESCAPE + "(.+)" + DELIMETER_ESCAPE + "(.+)"
+                        + DELIMETER_ESCAPE + "(.+)" + DELIMETER_ESCAPE + "(.+)"
+                        + DELIMETER_ESCAPE + "(.+)" + DELIMETER_ESCAPE + "(.+)$");
+    }
 
 
     private Integer id; // can't be null, unique, autogenerate, >0
@@ -28,6 +55,33 @@ public final class Person implements Comparable<Person> {
     private String passportID; // 5 <= lenght <= 24, can be null
     private Country nationality; // can't be null
     private Location location; // can't be null
+
+    private Person(Integer id, Date creationDate, String name,
+            Coordinates coordinates, Float height, Long weight,
+            String passportID, Country nationality, Location location) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID can\'t be null");
+        }
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID must be positive");
+        }
+        if (creationDate == null) {
+            throw new IllegalArgumentException("Creation date can\'t be null");
+        }
+        if (creationDate.compareTo(new Date()) > 0) {
+            throw new IllegalArgumentException("Creation date can\'t be further than now");
+        }
+
+        this.id = id;
+        this.creationDate = creationDate;
+        this.setName(name);
+        this.setCoordinates(coordinates);
+        this.setHeight(height);
+        this.setWeight(weight);
+        this.setPassportID(passportID);
+        this.setNationality(nationality);
+        this.setLocation(location);
+    }
 
     public Person(String name, Coordinates coordinates, Float height,
             Long weight, String passportID, Country nationality,
@@ -44,22 +98,67 @@ public final class Person implements Comparable<Person> {
         this.increaseID();
     }
 
+    public static Person deserializeCSV(String element) throws ParseException {
+        Matcher matcher = CSV_DESERIALIZATION_PATTERN.matcher(element);
+        if (matcher.find()) {
+            Integer id = new Integer(matcher.group(1));
+            Date creationDate = CREATION_DATE_FORMAT.parse(matcher.group(2));
+            String name = matcher.group(3);
+            Coordinates coordinates =
+                    Coordinates.deserializeCSV(matcher.group(4));
+            Float height = new Float(matcher.group(5));
+            Long weight = new Long(matcher.group(6));
+            String passportID = matcher.group(7);
+            Country nationality = Country.deserializeCSV(matcher.group(8));
+            Location location = Location.deserializeCSV(matcher.group(9));
+            return new Person(id, creationDate, name, coordinates, height,
+                    weight, passportID, nationality, location);
+        } else
+            throw new ParseException("[Person.deserializeCSV()]Argument doesn't match the pattern", 0);
+    }
+
     private void increaseID() {
         ++nextID;
     }
+
+    public void update(Person element) {
+        this.setName(element.name);
+        this.setCoordinates(element.coordinates);
+        this.setHeight(element.height);
+        this.setWeight(element.weight);
+        this.setPassportID(element.passportID);
+        this.setNationality(element.nationality);
+        this.setLocation(element.location);
+    }
+
+    public static void updateNextID(Collection<Person> collection) {
+        Integer maxID = 0;
+        for (Person element : collection) {
+            maxID = Integer.max(maxID, element.id);
+        }
+        Person.nextID = maxID + 1;
+    }   
 
     public void setName(String value) {
         if (value == null) {
             String message = "Name can\'t be null";
             throw new IllegalArgumentException(message);
         }
+
         if (value.length() == 0) {
             String message = "Name can\'t be blank";
             throw new IllegalArgumentException(message);
         }
-        if (value.contains(CSV_DELIMETER)) {
+
+        if (value.contains(CSVSerializable.DELIMETER)) {
             String message = String.format("Name can\'t contains \"%s\" symbol",
-                    CSV_DELIMETER);
+                    CSVSerializable.DELIMETER);
+            throw new IllegalArgumentException(message);
+        }
+
+        if (value.contains(CSVSerializable.STRING_DELIMETER)) {
+            String message = String.format("Name can\'t contains \"%s\" symbol",
+                    CSVSerializable.STRING_DELIMETER);
             throw new IllegalArgumentException(message);
         }
 
@@ -120,10 +219,18 @@ public final class Person implements Comparable<Person> {
             throw new IllegalArgumentException(message);
         }
 
-        if (value.contains(CSV_DELIMETER)) {
-            String message = String.format("PassportID can\'t contains \"%s\" symbol",
-                    CSV_DELIMETER);
+        if (value.contains(CSVSerializable.DELIMETER)) {
+            String message =
+                    String.format("PassportID can\'t contains \"%s\" symbol",
+                            CSVSerializable.DELIMETER);
             throw new IllegalArgumentException(message);
+        }
+
+        if (value.contains(CSVSerializable.STRING_DELIMETER)) {
+            String message =
+            String.format("PassportID can\'t contains \"%s\" symbol",
+                    CSVSerializable.STRING_DELIMETER);
+            throw new IllegalArgumentException(message);    
         }
         this.passportID = value;
     }
@@ -142,10 +249,18 @@ public final class Person implements Comparable<Person> {
             String message = "Location can\'t be null";
             throw new IllegalArgumentException(message);
         }
-        if (value.getName().contains(CSV_DELIMETER)) {
+
+        if (value.getName().contains(CSVSerializable.DELIMETER)) {
             String message =
                     String.format("Location.name can\'t contains \"%s\" symbol",
-                            CSV_DELIMETER);
+                            CSVSerializable.DELIMETER);
+            throw new IllegalArgumentException(message);
+        }
+
+        if (value.getName().contains(CSVSerializable.STRING_DELIMETER)) {
+            String message =
+                    String.format("Location.name can\'t contains \"%s\" symbol",
+                            CSVSerializable.STRING_DELIMETER);
             throw new IllegalArgumentException(message);
         }
 
@@ -188,6 +303,7 @@ public final class Person implements Comparable<Person> {
         return this.location;
     }
 
+    @Override
     public int compareTo(Person other) {
         final int moreValue = 1;
         final int lessValue = -1;
@@ -199,6 +315,14 @@ public final class Person implements Comparable<Person> {
             return lessValue;
         }
         return equalsValue;
+    }
+
+    @Override
+    public String serializeCSV() {
+        return String.format(CSV_SERIALIZATION_PATTERN, id,
+                CREATION_DATE_FORMAT.format(creationDate), name, coordinates.serializeCSV(),
+                height, weight, passportID, nationality.serializeCSV(),
+                location.serializeCSV());
     }
 
     @Override
