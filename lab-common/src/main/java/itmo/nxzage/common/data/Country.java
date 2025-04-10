@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import itmo.nxzage.common.util.CSVSerializable;
 
-public enum Country implements itmo.nxzage.common.util.CSVSerializable {
+public enum Country implements CSVSerializable {
     UNITED_KINGDOM(1, "The United Kingdom of Great Britan and Northen Irland"),
     USA(2, "The United States of America"),
     FRANCE(3, "France"),
