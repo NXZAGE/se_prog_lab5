@@ -22,8 +22,12 @@ public final class Storage {
         }
     }
 
-    // make private
     public Boolean load() {
+        return this.load(this.dumpManager);
+    }
+
+    // make private
+    public Boolean load(DumpManager dumpManager) {
         DumpManager.ReadingResponse response = dumpManager.read();
         if (response.successful()) {
             collection = new TreeSet<Person>(
@@ -34,6 +38,11 @@ public final class Storage {
     }
 
     public Boolean dump() {
+        return this.dump(this.dumpManager);
+    }
+
+    // make private
+    public Boolean dump(DumpManager dumpManager) {
         String serializedCollection = Converter.serialize(collection);
         DumpManager.WritingResponse response =
                 dumpManager.write(serializedCollection);
