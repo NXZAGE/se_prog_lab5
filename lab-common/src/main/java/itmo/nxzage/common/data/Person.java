@@ -24,7 +24,7 @@ public final class Person implements Comparable<Person>, CSVSerializable {
     public static final DateFormat CREATION_DATE_FORMAT =
             new SimpleDateFormat("<dd.MM.yyyy HH:mm:ss z>");
     // сериализация может пойти по пизде из-за \n
-
+    // нужно придумать Anonymous Person
     static {
         CSV_SERIALIZATION_PATTERN = "%d" + CSVSerializable.DELIMETER + // id
                 "%s" + CSVSerializable.DELIMETER + // creationDate
