@@ -1,6 +1,8 @@
-package itmo.nxzage.common.commands;
+package itmo.nxzage.common.commands.client;
 
-public final class ExecuteScript extends Command {
+import itmo.nxzage.common.commands.CommandType;
+
+public final class ExecuteScript extends ClientCommand {
     private static final CommandType TYPE;
     private static final String NAME;
     private static final String DESCRIPTION;
@@ -11,7 +13,14 @@ public final class ExecuteScript extends Command {
         DESCRIPTION = "execute_script description";
     }
 
-    public ExecuteScript() {
+    private String fileName;
+
+    public ExecuteScript(String fileName) {
         super(TYPE, NAME, DESCRIPTION);
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 }

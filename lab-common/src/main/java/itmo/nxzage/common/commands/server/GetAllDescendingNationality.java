@@ -1,6 +1,6 @@
 package itmo.nxzage.common.commands;
 
-public final class GetAllDescendingNationality extends Command {
+public final class GetAllDescendingNationality extends ServerCommand {
     private static final CommandType TYPE;
     private static final String NAME;
     private static final String DESCRIPTION;

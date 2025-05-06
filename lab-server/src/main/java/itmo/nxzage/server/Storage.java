@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 import itmo.nxzage.common.data.Person;
+import itmo.nxzage.server.Controllers.DataManipulationController;
+import itmo.nxzage.server.Controllers.DataProvisionController;
+import itmo.nxzage.server.Controllers.MemoryController;
 import itmo.nxzage.server.csv.Converter;
 
 public final class Storage {
@@ -20,6 +23,10 @@ public final class Storage {
             System.out.println(
                     "Storage wasn\'t loaded successfully. Collection is empty");
         }
+    }
+
+    public ControlPanel getControlPanel() {
+        return new ControlPanel(new DataManipulationController(this), new DataProvisionController(this), new MemoryController(this));
     }
 
     public Boolean load() {

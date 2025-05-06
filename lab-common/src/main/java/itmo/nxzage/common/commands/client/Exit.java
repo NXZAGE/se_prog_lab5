@@ -1,6 +1,8 @@
-package itmo.nxzage.common.commands;
+package itmo.nxzage.common.commands.client;
 
-public final class Exit extends Command {
+import itmo.nxzage.common.commands.CommandType;
+
+public final class Exit extends ClientCommand {
     private static final CommandType TYPE;
     private static final String NAME;
     private static final String DESCRIPTION;

@@ -1,6 +1,8 @@
-package itmo.nxzage.common.commands;
+package itmo.nxzage.common.commands.server;
 
-public final class FilterStartsWithPassportID extends Command {
+import itmo.nxzage.common.commands.CommandType;
+
+public final class FilterStartsWithPassportID extends ServerCommand {
     private static final CommandType TYPE;
     private static final String NAME;
     private static final String DESCRIPTION;

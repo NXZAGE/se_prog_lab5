@@ -2,20 +2,20 @@ package itmo.nxzage.common.commands;
 
 import itmo.nxzage.common.data.Person;
 
-public final class Add extends Command {
+public final class RemoveLower extends ServerCommand {
     private static final CommandType TYPE;
-    private static final String DESCRIPTION;
     private static final String NAME;
+    private static final String DESCRIPTION;
 
     static {
-        TYPE = CommandType.ADD;
-        NAME = "add";
-        DESCRIPTION = "ADD desciption";
+        TYPE = CommandType.REMOVE_LOWER;
+        NAME = "remove_lower";
+        DESCRIPTION = "remove_lower description";
     }
 
     private Person element;
-    
-    public Add(Person element) {
+
+    public RemoveLower(Person element) {
         super(TYPE, NAME, DESCRIPTION);
         this.element = element;
     }

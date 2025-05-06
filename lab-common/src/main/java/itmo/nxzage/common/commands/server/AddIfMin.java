@@ -1,21 +1,22 @@
-package itmo.nxzage.common.commands;
+package itmo.nxzage.common.commands.server;
 
+import itmo.nxzage.common.commands.CommandType;
 import itmo.nxzage.common.data.Person;
 
-public final class RemoveLower extends Command {
+public final class AddIfMin extends ServerCommand {
     private static final CommandType TYPE;
     private static final String NAME;
     private static final String DESCRIPTION;
 
     static {
-        TYPE = CommandType.REMOVE_LOWER;
-        NAME = "remove_lower";
-        DESCRIPTION = "remove_lower description";
+        TYPE = CommandType.ADD_IF_MIN;
+        NAME = "add_id_min";
+        DESCRIPTION = "add_if_min description";
     }
 
     private Person element;
 
-    public RemoveLower(Person element) {
+    public AddIfMin(Person element) {
         super(TYPE, NAME, DESCRIPTION);
         this.element = element;
     }

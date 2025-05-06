@@ -1,24 +1,23 @@
-package itmo.nxzage.common.commands;
+package itmo.nxzage.common.commands.server;
 
+import itmo.nxzage.common.commands.CommandType;
 import itmo.nxzage.common.data.Person;
 
-public final class Update extends Command { 
+public final class Add extends ServerCommand {
     private static final CommandType TYPE;
-    private static final String NAME;
     private static final String DESCRIPTION;
+    private static final String NAME;
 
     static {
-        TYPE = CommandType.UPDATE;
-        NAME = "update";
-        DESCRIPTION = "update description";
+        TYPE = CommandType.ADD;
+        NAME = "add";
+        DESCRIPTION = "ADD desciption";
     }
 
-    private Integer id;
     private Person element;
-
-    public Update(Integer id, Person element) {
+    
+    public Add(Person element) {
         super(TYPE, NAME, DESCRIPTION);
-        this.id = id;
         this.element = element;
     }
 

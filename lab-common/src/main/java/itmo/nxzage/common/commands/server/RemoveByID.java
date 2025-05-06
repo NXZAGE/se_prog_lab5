@@ -1,6 +1,6 @@
 package itmo.nxzage.common.commands;
 
-public class RemoveByID extends Command {
+public final class RemoveByID extends Command {
     private static final CommandType TYPE;
     private static final String NAME;
     private static final String DESCRIPTION;

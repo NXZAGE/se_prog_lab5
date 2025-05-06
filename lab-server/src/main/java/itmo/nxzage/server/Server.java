@@ -2,6 +2,7 @@ package itmo.nxzage.server;
 
 import java.util.Date;
 import java.text.ParseException;
+import itmo.nxzage.common.commands.server.ServerCommand;
 import itmo.nxzage.common.data.Coordinates;
 import itmo.nxzage.common.data.Country;
 import itmo.nxzage.common.data.Location;
@@ -9,10 +10,18 @@ import itmo.nxzage.common.data.Person;
 import itmo.nxzage.server.tests.DumpManagerTester;
 
 public final class Server {
+    private Storage storage;
+    private ControlPanel mainControlPanel;
 
-    private Server() {
-        throw new UnsupportedOperationException(
-                "This is an utility class and can not be instantiated");
+    public Server() {
+        storage = new Storage();
+        mainControlPanel = storage.getControlPanel();
+    }
+
+    public ExecutionResponse execute(ServerCommand command) {
+        // translate ServerCommand -> Executable
+        // exe.execute(mainControlPanel);
+        return null;
     }
 
     public static void main(String[] args) {
